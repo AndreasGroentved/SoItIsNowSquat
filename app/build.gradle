@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "groentved.andreas.soitisnowsquat"
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"

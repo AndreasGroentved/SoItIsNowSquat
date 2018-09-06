@@ -1,17 +1,17 @@
-package com.groentved.andreas.chordrecognition.ui.base
+package groentved.andreas.soitisnowsquat.ui.base
 
 import android.arch.lifecycle.AndroidViewModel
-import com.groentved.andreas.chordrecognition.ChordApp
-import com.groentved.andreas.chordrecognition.domain.Domain
-import com.groentved.andreas.chordrecognition.ui.inject.component.DaggerActivityComponent
-import com.groentved.andreas.chordrecognition.ui.inject.module.ActivityModule
+import groentved.andreas.soitisnowsquat.SquatApp
+import groentved.andreas.soitisnowsquat.domain.Domain
+import groentved.andreas.soitisnowsquat.inject.component.DaggerActivityComponent
+import groentved.andreas.soitisnowsquat.inject.module.ActivityModule
 import javax.inject.Inject
 
 /**
  * Created by Andreas Grøntved on 05-08-2017.
  **/
 
-abstract class BaseViewModel(application: ChordApp) : AndroidViewModel(application) {
+abstract class BaseViewModel(application: SquatApp) : AndroidViewModel(application) {
 
     @Inject
     lateinit var domain: Domain

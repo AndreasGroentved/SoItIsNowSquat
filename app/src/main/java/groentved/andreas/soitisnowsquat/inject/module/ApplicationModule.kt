@@ -2,7 +2,7 @@ package groentved.andreas.soitisnowsquat.inject.module
 
 import android.app.Application
 import android.content.Context
-import com.groentved.andreas.chordrecognition.data.pref.AppPreferencesHelper
+import groentved.andreas.soitisnowsquat.data.pref.AppPreferencesHelper
 import dagger.Module
 import dagger.Provides
 import groentved.andreas.soitisnowsquat.data.Data
