@@ -1,5 +1,6 @@
 package groentved.andreas.comeonsquat.ui.settings
 
+import android.app.Application
 import groentved.andreas.comeonsquat.SquatApp
 import groentved.andreas.comeonsquat.domain.AccelerationUtil
 import groentved.andreas.comeonsquat.domain.AccelerationUtil.format
@@ -11,20 +12,31 @@ import groentved.andreas.comeonsquat.ui.base.BaseViewModel
  * Created by Andreas Grøntved on 11-09-2018.
  **/
 
-class SettingsViewModel constructor(application: SquatApp) : BaseViewModel(application) {
+class SettingsViewModel constructor(application: Application) : BaseViewModel(application as SquatApp) {
 
 
     private val stableTimer = StableTimer()
-
+    private var lastUpdate = listOf(0.0, 0.0, 0.0)
 
     fun progressTimer() = stableTimer.timerObservable
-    fun endTimer() = stableTimer.timerObservable
+    fun endTimer() = stableTimer.endTimeObservable
 
 
     fun update() {
-        domain.startOrientationUpdates(100).subscribe {
-            stableTimer.update(AccelerationUtil.getAverage(it, getPosition()).toFloat())
+        stableTimer.start()
+        domain.startAccelerationUpdates(100).subscribe {
+            println("update")
+            println(lastUpdate)
+            val average: List<Double> = AccelerationUtil.getAverage(it)
+            lastUpdate = average
+            stableTimer.update(average)
         }
+    }
+
+    fun updateStartParallelAcceleration(startParallel: Boolean) {
+        println(lastUpdate)
+        if (startParallel) domain.setStart(lastUpdate[PhonePosition.getAxis(domain.getPhonePosition())].toFloat())
+        else domain.setParallel(lastUpdate[PhonePosition.getAxis(domain.getPhonePosition())].toFloat())
     }
 
     fun stop() {

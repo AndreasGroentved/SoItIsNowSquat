@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_4sdp"
-        android:drawableBottom="@drawable/start"
+        android:drawableBottom="@drawable/icon_start"
         android:gravity="center"
         android:text="Start"
         android:textSize="@dimen/text_size_medium"
@@ -83,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_4sdp"
-        android:drawableBottom="@drawable/ic_stop_black_24dp"
+        android:drawableBottom="@drawable/icon_start"
         android:gravity="center"
         android:text="Parallel"
         android:textSize="@dimen/text_size_medium"
@@ -180,7 +180,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_4sdp"
         android:max="20"
-        android:progress="1"
+        android:progress="-1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -191,7 +191,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_4sdp"
         android:max="100"
-        android:progress="1"
+        android:progress="-1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header_volume" />
@@ -221,7 +221,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_4sdp"
-        android:text="10%"
+        android:text="100%"
         android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/header_volume" />
@@ -232,7 +232,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_4sdp"
         android:layout_marginTop="8dp"
-        android:text="100%"
+        android:text="20%"
         android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/header_error" />

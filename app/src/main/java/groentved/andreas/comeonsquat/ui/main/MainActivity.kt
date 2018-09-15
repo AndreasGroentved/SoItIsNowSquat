@@ -19,11 +19,14 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this@MainActivity).get(MainViewModel::class.java)
 
         button_start.setOnClickListener {
             viewModel.toggleListening()
         }
+
+        firstTime()
+        setUpListeners()
 
 
     }

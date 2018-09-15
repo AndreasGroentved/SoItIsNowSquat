@@ -1,35 +1,32 @@
 package groentved.andreas.comeonsquat.ui.main
 
+import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.os.AsyncTask
 import groentved.andreas.comeonsquat.SquatApp
+import groentved.andreas.comeonsquat.domain.AccelerationUtil.format
 import groentved.andreas.comeonsquat.domain.PhonePosition
 import groentved.andreas.comeonsquat.domain.PositionHandler
 import groentved.andreas.comeonsquat.ui.base.BaseViewModel
 import io.reactivex.Observable
-import groentved.andreas.comeonsquat.domain.AccelerationUtil.format
 
 /**
  * Created by Andreas Grøntved on 12-07-2017.
  **/
 
-class MainViewModel constructor(application: SquatApp) : BaseViewModel(application) {
+class MainViewModel constructor(application: Application) : BaseViewModel(application as SquatApp) {
     private val angleUpdates = MediatorLiveData<String>()
     private val crossedParallel = MediatorLiveData<Boolean>()
     private var isListening = false
     private var updateRate = 100 //TODO setting for ændring af værdi - strøm og sådan noget...
-    private var subscription: Observable<List<FloatArray>>? = null
-    private val positionHandler: PositionHandler
+    private var subscription: Observable<List<List<Float>>>? = null
+    private val positionHandler: PositionHandler = domain.getPositionHandler()
     private var isBelow50Percent = false
     private var isParallel = false
 
-    init {
-        positionHandler = domain.getPositionHandler()
-    }
-
     fun playSound() {
-        TODO()
+        domain.getSound().playSound()
     }
 
 
@@ -52,7 +49,7 @@ class MainViewModel constructor(application: SquatApp) : BaseViewModel(applicati
     private fun startListening() {
 
         isListening = true
-        subscription = domain.startOrientationUpdates(updateRate)
+        subscription = domain.startAccelerationUpdates(updateRate)
         subscription!!.subscribe {
             val acceleration = positionHandler.getAcceleration(it, domain.getPhonePosition())
             val hasCrossedParallel = positionHandler.hasCrossedParallel(acceleration, domain.getOverShootBuffer(), domain.getParallel(), PhonePosition.getAxisDefaultStart(domain.getPhonePosition()))
@@ -88,8 +85,6 @@ class MainViewModel constructor(application: SquatApp) : BaseViewModel(applicati
             true
         } else false
     }
-
-
 
 
 }

@@ -12,6 +12,7 @@ import groentved.andreas.comeonsquat.domain.Domain
 import groentved.andreas.comeonsquat.domain.PositionHandler
 import groentved.andreas.comeonsquat.domain.sensor.Orientation
 import groentved.andreas.comeonsquat.domain.sensor.SensorOrientation
+import groentved.andreas.comeonsquat.domain.sound.SoundPlayer
 import javax.inject.Singleton
 
 @Module
@@ -48,10 +49,15 @@ class ApplicationModule(private val application: Application) {
 
     @Singleton
     @Provides
-    fun provideLogicAccess(data: Data, positionHandler: PositionHandler, orientation: Orientation): Domain = Domain(data, orientation, positionHandler)
+    fun provideLogicAccess(data: Data, positionHandler: PositionHandler, orientation: Orientation, soundPlayer: SoundPlayer): Domain = Domain(data, orientation, positionHandler, soundPlayer)
 
     @Singleton
     @Provides
     fun providesPrefHelper(context: Context): PrefHelper = AppPreferencesHelper(context)
+
+    @Singleton
+    @Provides
+    fun providesSound(context: Context): SoundPlayer = SoundPlayer(context)
+
 
 }

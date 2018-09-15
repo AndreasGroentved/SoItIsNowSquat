@@ -4,12 +4,12 @@ import groentved.andreas.comeonsquat.domain.PhonePosition.*
 
 class PositionHandler {
 
-    fun getAcceleration(accelerationArray: List<FloatArray>, phonePosition: PhonePosition): Double {
+    fun getAcceleration(accelerationArray: List<List<Float>>, phonePosition: PhonePosition): Double {
         return when (phonePosition) {
-            BACK_PARALLEL_TO_TOP_OF_QUAD -> AccelerationUtil.getAverage(accelerationArray, 1)
-            BACK_PARALLEL_TO_SIDE_OF_QUAD -> AccelerationUtil.getAverage(accelerationArray, 0)
-            BACK_PERPENDICULAR_TO_SIDE_OF_QUAD -> AccelerationUtil.getAverage(accelerationArray, 0)
-            BACK_PERPENDICULAR_TO_TOP_OF_QUAD -> AccelerationUtil.getAverage(accelerationArray, 3)
+            BACK_PARALLEL_TO_TOP_OF_QUAD -> AccelerationUtil.getAverageOneAxis(accelerationArray, 1)
+            BACK_PARALLEL_TO_SIDE_OF_QUAD -> AccelerationUtil.getAverageOneAxis(accelerationArray, 0)
+            BACK_PERPENDICULAR_TO_SIDE_OF_QUAD -> AccelerationUtil.getAverageOneAxis(accelerationArray, 0)
+            BACK_PERPENDICULAR_TO_TOP_OF_QUAD -> AccelerationUtil.getAverageOneAxis(accelerationArray, 3)
         }
     }
 

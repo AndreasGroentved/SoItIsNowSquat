@@ -14,17 +14,17 @@ class SensorOrientation(sensorManager: SensorManager) : SensorEventListener, Ori
     private val sensorManager: SensorManager
     private val sensorAccelerometer: Sensor
 
-    private val valuesAccelerometer = FloatArray(3)
-    private var publishSubject: PublishSubject<FloatArray>? = null
+    private var valuesAccelerometer = listOf<Float>()
+    private var publishSubject: PublishSubject<List<Float>>? = null
 
     init {
         this.sensorManager = sensorManager
         this.sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     }
 
-    override fun start(delayInMilliseconds: Int): Observable<List<FloatArray>> {
+    override fun start(delayInMilliseconds: Int): Observable<List<List<Float>>> {
         if (publishSubject == null) publishSubject = PublishSubject.create()
-        sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_UI)
+        sensorManager.registerListener(this, sensorAccelerometer, SensorManager.SENSOR_DELAY_GAME)
         return publishSubject!!.buffer(delayInMilliseconds.toLong(), TimeUnit.MILLISECONDS)
     }
 
@@ -37,17 +37,16 @@ class SensorOrientation(sensorManager: SensorManager) : SensorEventListener, Ori
     override fun onAccuracyChanged(arg0: Sensor, arg1: Int) {}
 
     override fun onSensorChanged(event: SensorEvent) {
-        updateSensorArrays(event)
         if (canPublish()) {
-            publishSubject!!.onNext(valuesAccelerometer)
+            val i = event.sensor.type
+            if (i == Sensor.TYPE_ACCELEROMETER) {
+                valuesAccelerometer = event.values.copyOfRange(0, 3).toList()
+                println("come on son: " + valuesAccelerometer.toString())
+                publishSubject!!.onNext(valuesAccelerometer)
+            }
         }
     }
 
-    private fun updateSensorArrays(event: SensorEvent) {
-        val i = event.sensor.type
-        if (i == Sensor.TYPE_ACCELEROMETER)
-            System.arraycopy(event.values, 0, valuesAccelerometer, 0, 3)
-    }
 
     private fun canPublish(): Boolean = publishSubject != null
 

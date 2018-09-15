@@ -2,9 +2,10 @@ package groentved.andreas.comeonsquat.domain
 
 import groentved.andreas.comeonsquat.data.Data
 import groentved.andreas.comeonsquat.domain.sensor.Orientation
+import groentved.andreas.comeonsquat.domain.sound.SoundPlayer
 import io.reactivex.Observable
 
-class Domain(private val data: Data, private val orientationSensor: Orientation, private val positionHandler: PositionHandler) {
+class Domain(private val data: Data, private val orientationSensor: Orientation, private val positionHandler: PositionHandler, private val sound: SoundPlayer) {
 
     fun isFirstTime(): Boolean = data.isFirstTime()
     fun setIsFirstTime(firstTime: Boolean): Unit = data.setIsFirstTime(firstTime)
@@ -19,8 +20,9 @@ class Domain(private val data: Data, private val orientationSensor: Orientation,
     fun setOverShootBuffer(percent: Float) = data.setOverShootBuffer(percent)
     fun getOverShootBuffer(): Float = data.getOverShootBuffer()
     fun getPositionHandler() = positionHandler
+    fun getSound(): SoundPlayer = sound
 
-    fun startOrientationUpdates(delayInMilliseconds: Int): Observable<List<FloatArray>> =
+    fun startAccelerationUpdates(delayInMilliseconds: Int): Observable<List<List<Float>>> =
             orientationSensor.start(delayInMilliseconds)
 
     fun stopOrientationUpdates() = orientationSensor.stop()

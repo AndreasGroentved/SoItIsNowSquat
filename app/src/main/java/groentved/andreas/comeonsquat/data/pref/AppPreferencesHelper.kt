@@ -37,7 +37,7 @@ class AppPreferencesHelper(context: Context) : PrefHelper {
         @JvmStatic
         private val PREF_POSITION = "POS"
         @JvmStatic
-        private val PREF_VOLUME = "POS"
+        private val PREF_VOLUME = "VOL"
         @JvmStatic
         private val PREF = "SQUAT"
 

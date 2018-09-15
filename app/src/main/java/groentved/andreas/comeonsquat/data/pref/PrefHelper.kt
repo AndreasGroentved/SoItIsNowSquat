@@ -7,7 +7,7 @@ interface PrefHelper {
     fun getIsFirstTime(): Boolean
     fun setIsFirstTime(firstTime: Boolean)
 
-    fun setParallel(angle: Float)
+    fun setParallel(offset: Float)
     fun getParallel(): Float
 
     fun setStart(offset: Float)

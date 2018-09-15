@@ -3,6 +3,7 @@ package groentved.andreas.comeonsquat.ui.settings
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.widget.RadioButton
 import android.widget.SeekBar
 import groentved.andreas.comeonsquat.R
 import groentved.andreas.comeonsquat.domain.PhonePosition
@@ -24,6 +25,7 @@ class SettingsActivity : BaseActivity() {
         error()
         volume()
         calibrateButtons()
+        setTimerListeners()
     }
 
 
@@ -34,17 +36,7 @@ class SettingsActivity : BaseActivity() {
             isCalibrating = true
             viewModel.update()
             startPar = false
-            calibrate_parallel.setBackgroundResource(R.drawable.ic_stop_black_24dp)
-            viewModel.progressTimer().observe(this, Observer {
-                if (startPar) return@Observer
-                calibrate_parallel.text = viewModel.formatTimeLeft(it!!)
-            })
-            viewModel.endTimer().observe(this, Observer {
-                if (startPar) return@Observer
-                calibrate_parallel.text = "Parallel"
-                calibrate_parallel.setBackgroundResource(R.drawable.start)
-                isCalibrating = false
-            })
+            calibrate_parallel.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_stop)
         }
 
         calibrate_start.setOnClickListener {
@@ -53,23 +45,35 @@ class SettingsActivity : BaseActivity() {
             isCalibrating = true
             viewModel.update()
             startPar = true
-            calibrate_start.setBackgroundResource(R.drawable.ic_stop_black_24dp)
-            viewModel.progressTimer().observe(this, Observer {
-                if (!startPar) return@Observer
-                calibrate_start.text = viewModel.formatTimeLeft(it!!)
-            })
-            viewModel.endTimer().observe(this, Observer {
-                if (!startPar) return@Observer
-                calibrate_start.text = "Start"
-                calibrate_start.setBackgroundResource(R.drawable.start)
-                isCalibrating = false
-            })
+            calibrate_start.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_stop)
         }
     }
 
+    private fun setTimerListeners() {
+        viewModel.progressTimer().observe(this, Observer {
+            if (!startPar)
+                calibrate_parallel.text = viewModel.formatTimeLeft(it!!)
+            else
+                calibrate_start.text = viewModel.formatTimeLeft(it!!)
+        })
+        viewModel.endTimer().observe(this, Observer {
+            if (!startPar) {
+                calibrate_parallel.text = "Parallel"
+                calibrate_parallel.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.icon_start)
+            } else {
+                calibrate_start.text = "Start"
+                calibrate_start.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.icon_start)
+            }
+            isCalibrating = false
+            viewModel.stop()
+            viewModel.updateStartParallelAcceleration(startPar)
+        })
+
+    }
+
     private fun placement() {
-        placement_group.check(viewModel.getPosition())
-        placement_group.setOnCheckedChangeListener { group, checkedId ->
+        getChildAt(viewModel.getPosition())?.isChecked = true
+        placement_group.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == radio_top_of_quad.id) {
                 viewModel.setPosition(PhonePosition.BACK_PARALLEL_TO_TOP_OF_QUAD.phoneVal)
             } else if (checkedId == radio_side_of_quad.id) {
@@ -78,36 +82,46 @@ class SettingsActivity : BaseActivity() {
         }
     }
 
+    private fun getChildAt(position: Int): RadioButton? {
+        var index = 0
+        for (i in 0 until placement_group.childCount) {
+            val radioButton = placement_group.getChildAt(i)
+            if (radioButton is RadioButton) {
+                if (index == position) return radioButton
+                index++
+            }
+        }
+        return null
+    }
+
     private fun error() {
-        errorSeekBar.progress = viewModel.getError().toInt()
-        error_percentage.text = "Error of ${viewModel.getError().toInt()}%"
         errorSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                if (fromUser) viewModel.setError(progress.toFloat())
+                if (fromUser)
+                    viewModel.setError(progress.toFloat())
+                error_percentage.text = "Error of ${viewModel.getError().toInt()}%"
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-            }
-        });
+            override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
+        })
+        errorSeekBar.progress = viewModel.getError().toInt()
     }
 
     private fun volume() {
-        volumeSeekBar.progress = viewModel.getVolume()
-        volume_percentage.text = "Volume: ${viewModel.getError().toInt()}%"
         volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                if (fromUser) viewModel.setVolume(progress.toFloat())
+                if (fromUser)
+                    viewModel.setVolume(progress.toFloat())
+
+                volume_percentage.text = "Volume: ${viewModel.getVolume()}%"
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
+        })
+        volumeSeekBar.progress = viewModel.getVolume()
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-            }
-        });
     }
 
 }
